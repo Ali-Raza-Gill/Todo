@@ -3,8 +3,6 @@ import { Route, Routes } from 'react-router-dom'
 import Frontend from './Frontend'
 // import Auth from './Auth'
 
-
-
 export default function Index() {
     return (
         <>

@@ -31,11 +31,14 @@ export default function Navbar() {
                 <li><a className="dropdown-item" href="#">Action</a></li>
                 <li><a className="dropdown-item" href="#">Another action</a></li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item" href="#">Something else here</a></li>
+                <li><a className="dropdown-item" href="#">Something else</a></li>
               </ul>
             </li>
             <li className="nav-item">
               <Link to='/todo' className="nav-link" href="#">Todo</Link>
+            </li>
+            <li className="nav-item">
+              <Link to='/task' className="nav-link" href="#">Task</Link>
             </li>
           </ul>
           <Link to='/sign-in' className='btn btn-dark text-white text-decoration-none ' >Sign in</Link>

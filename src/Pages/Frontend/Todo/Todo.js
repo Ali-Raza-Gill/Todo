@@ -14,10 +14,8 @@ export default function Todo() {
     const handlechange = (e) => {
         setState(s => ({ ...s, [e.target.name]: e.target.value }))
     }
-
     return (
         <>
-
             <div className="container">
                 <div className="row">
                     <div className="col  col-lg-6 offset-lg-3  my-5 ">
@@ -26,7 +24,7 @@ export default function Todo() {
                                 <h1 className='text-center'>Todo List</h1>
                             </div>
                         </div>
-                        <div className="card p-lg-4 p-md-3 p-sm-2 " style={{ backgroundColor: "#F1FAEE" }}  >
+                        <div className="card p-lg-4 p-md-3 p-sm-2 shadow" style={{ backgroundColor: "#F1FAEE" }}  >
                             <div className="form "  >
                                 <div className="row mb-4">
                                     <div className="col col-md-6">
