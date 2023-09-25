@@ -1,103 +1,96 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import {createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../../config/firebase';
-const initialState={
-  name:"",
-  email:"",   
-  password:"",
-  confirmPassword:""
-}
-export default function Hero() {
-const [state, setState] = useState(initialState)
+import React, { useEffect, useState } from 'react'
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../../../config/firebase';
+import { doc, deleteDoc } from "firebase/firestore";
 
-  const handleChange=(e)=>{
-    setState(s=>({...s,[e.target.name]:e.target.value}))
-  }
 
-  const handleSubmit = (e)=>{
-    e.preventDefault();
-    console.log(state)
-    const {email,password}=state
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log("user is created successfully")
-      // ...
-    })
-    .catch((error) => {
-      console.error(error)
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
-  }
-  return (
-    <div className="container">
-      <div className="row">
-        <div className="col col-md-6 offset-md-3 col-lg-4 offset-lg-4 ">
-          <div className="card p-2 p-md-3 p-lg-4 my-5 shadow">
-            <form onSubmit={handleSubmit}>
-              <div className="row text-center ">
-                <h2>Welcome</h2>
-                <h6>Sign Up to Create your Account</h6>
-              </div>
-              <div className="row mb-2">
-                <div className="col">
-                  <label htmlFor="exampleInputEmail1" className="form-label"><strong>Name</strong> </label>
-                  <input type="text" name='name' placeholder='Enter your Name' onChange={handleChange} className="form-control" aria-describedby="emailHelp" />
+export default function Todo() {
+
+
+    const [documents, setDocuments] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+
+
+
+    const fetchDocuments = async () => {
+        setIsLoading(true)
+        let array = []
+
+        const querySnapshot = await getDocs(collection(db, "todos"));
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            let data = doc.data()
+            array.push(data)
+        });
+        setDocuments(array)
+        setIsLoading(false)
+    }
+
+    useEffect(() => {
+        fetchDocuments()
+    }, [])
+
+
+    const handleTodoDelete = async (todoId) => {
+        try {
+            await deleteDoc(doc(db, "todos", todoId));
+
+            // this code is to change data without refreshing it.
+            setDocuments((prevDocuments) =>
+                prevDocuments.filter((todo) => todo.id !== todoId)
+            );
+        }
+        catch (err) {
+            console.error(err)
+        }
+    }
+
+
+
+    return (
+        <>
+            <div className="container">
+                <div className="row">
+                    <div className="col  col-lg-6 offset-lg-3  my-5 ">
+                        <div className="row">
+                            <div className="col  ">
+                                <h1 className='text-center'>Todo List</h1>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col ">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Sr. No</th>
+                                                <th scope="col">Title</th>
+                                                <th scope="col">Location</th>
+                                                <th scope="col">Descriptions</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {documents.map((todo, i) => {
+                                                return <tr>
+                                                    <th scope="row">{i + 1}</th>
+                                                    <td>{todo.title}</td>
+                                                    <td>{todo.location}</td>
+                                                    <td>{todo.description}</td>
+                                                    <td><button className='btn btn-info btn-sm me-1'>Edit</button><button className='btn btn-danger btn-sm ' onClick={() => { handleTodoDelete(todo.id) }}>Delete</button></td>
+                                                </tr>
+                                            })
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div className="row mb-2">
-                <div className="col">
-                  <label htmlFor="exampleInputEmail1" className="form-label"><strong>Email address</strong></label>
-                  <input type="email" name='email' placeholder='Enter your Email' onChange={handleChange} className="form-control" aria-describedby="emailHelp" />
-                </div>
-              </div>
-              <div className="row mb-2">
-                <div className="col">
-                  <label htmlFor="exampleInputPassword1" className="form-label"><strong>Password</strong></label>
-                  <input type="password" name='password' placeholder='Enter your Password' onChange={handleChange} className="form-control" id="exampleInputPassword1" />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col">
-                  <label htmlFor="exampleInputEmail1" className="form-label"><strong>Confirm Password</strong></label>
-                  <input type="password" name='confirmPassword' placeholder='Confirm your Password' onChange={handleChange} className="form-control" aria-describedby="emailHelp" />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col">
-                  <button type="submit" className="btn btn-primary w-100">Sign up</button>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col col-lg-5">
-                  <hr />
-                </div>
-                <div className="col col-lg-2 ">
-                  <p className='text-center '>or</p>
-                </div>
-                <div className="col col-lg-5">
-                  <hr />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col">
-                  <button type="submit" className="btn btn-dark w-100 " onClick={handleSubmit}>Sign up with Google</button>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col d-flex">
-                  <p>If you have already account?</p>
-                  <Link to='/sign-in' className='text-primary text-decoration-none '>  Sign in</Link>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+            </div>
+        </>
+    )
 }

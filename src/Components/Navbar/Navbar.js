@@ -42,7 +42,7 @@ export default function Navbar() {
             </li>
           </ul>
           <Link to='/sign-in' className='btn btn-dark text-white text-decoration-none ' >Sign in</Link>
-          <Link to='/' className='btn btn-dark text-white text-decoration-none mx-2  ' >Sign up</Link>
+          <Link to='/signup' className='btn btn-dark text-white text-decoration-none mx-2  ' >Sign up</Link>
         </div>
       </div>
     </nav>

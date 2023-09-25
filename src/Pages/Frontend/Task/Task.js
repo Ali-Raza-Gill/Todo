@@ -1,21 +1,49 @@
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react'
+import { db } from '../../../config/firebase';
 const initialState = {
-    task: "",
+    taskName: "",
     topic: "",
     details: ""
 }
 export default function Task() {
-    const [state, setState] = useState(initialState);
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log(state);
-
-    }
     const handleChange = (e) => {
         setState(s => ({ ...s, [e.target.name]: e.target.value }))
     }
+    const [state, setState] = useState(initialState);
+    const [isProcessing, setIsProcessing] = useState(false)
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        let { taskName, topic, details } = state
+        taskName = taskName.trim();
+        topic = topic.trim();
+        details = details.trim();
 
-
+        if (taskName.length < 3) {
+            return alert("Enter correct Task Name")
+        }
+        if (topic.length < 5) {
+            return alert("Enter Correct Topic Name")
+        }
+        if (details.length < 10) {
+            return alert("Enter details more than a 10 words")
+        }
+        let task = { taskName, topic, details }
+        task.dateCreated = serverTimestamp()
+        task.id = Math.random().toString(36).slice(2)
+        createDocument(task);
+    }
+    const createDocument = async (task) => {
+        setIsProcessing(true)
+        try {
+            // Assuming you have 'db' imported from Firebase somewhere in your code.
+            await setDoc(doc(db, 'tasks', task.id), task);
+            alert('Your Task is added successfully');
+        } catch (err) {
+            console.error(err);
+        }
+        setIsProcessing(false)
+    }
     return (
         <div className="container mt-5">
             <div className="row">
@@ -29,8 +57,8 @@ export default function Task() {
                             </div><hr className='' />
                             <div className="horizontal-line w-50 "></div>
                             <div className="row">
-                                <div className="col col-md-6 col-sm-12  mb-4">
-                                    <input type="text" name='task' className='p-2 w-100' placeholder='Enter Name' onChange={handleChange} />
+                                <div className="col col-md-6 col-sm-12 mb-4">
+                                    <input type="text" name='taskName' className='p-2 w-100' placeholder='Enter task Name' onChange={handleChange} />
                                 </div>
                                 <div className="col col-md-6 col-sm-12 mb-4">
                                     <input type="text" name='topic' className='p-2 w-100' placeholder='Enter Topic' onChange={handleChange} />
@@ -43,7 +71,7 @@ export default function Task() {
                             </div>
                             <div className="row">
                                 <div className="col">
-                                    <button className='btn btn-success w-100'onClick={handleSubmit}>Add Task</button>
+                                    <button className='btn btn-success w-100' onClick={handleSubmit} disabled={isProcessing}>Add Task</button>
                                 </div>
                             </div>
                         </div>

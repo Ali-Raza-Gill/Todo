@@ -1,32 +1,40 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import {signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../../config/firebase';
 
-const initialState={
-email:"",
-password:""
+const initialState = {
+    email: "",
+    password: ""
 }
 export default function SignIn() {
-    const [state,setState] =useState(initialState)
-    const handleChange=(e)=>{
-        setState(s=>({...s,[e.target.name]:e.target.value}))
+    const [state, setState] = useState(initialState)
+    const [isProcessing, setIsprocessing] = useState(false)
+    const handleChange = (e) => {
+        setState(s => ({ ...s, [e.target.name]: e.target.value }))
     }
-    const handlelogin=(e)=>{
-        e.preventDefault(); 
-       
-        const {email,password}=state
+    const handlelogin = (e) => {
+        e.preventDefault();
+
+        const { email, password } = state
+
+        setIsprocessing(true)
+
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          console.log("the user is sign in successfully")
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log("the user is sign in successfully")
+                console.log(user)
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            })
+            .finally(() => {
+                setIsprocessing(false)
+            });
     }
     return (
         <div className="container">
