@@ -40,6 +40,9 @@ export default function Navbar() {
             <li className="nav-item">
               <Link to='/task' className="nav-link" href="#">Task</Link>
             </li>
+            <li className="nav-item">
+              <Link to='/task-list' className="nav-link" href="#">Task List</Link>
+            </li>
           </ul>
           <Link to='/sign-in' className='btn btn-dark text-white text-decoration-none ' >Sign in</Link>
           <Link to='/signup' className='btn btn-dark text-white text-decoration-none mx-2  ' >Sign up</Link>

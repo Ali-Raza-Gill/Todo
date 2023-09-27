@@ -10,6 +10,7 @@ import Footer from '../../Components/Footer/Footer'
 import SignIn from './SignIn/SignIn'
 import Todo from './Todo/Todo'
 import Task from './Task/Task'
+import TaskList from './TasksList/TaskList'
 
 export default function index() {
     return (
@@ -23,6 +24,7 @@ export default function index() {
                     <Route path='contact' element={<Contact />} />
                     <Route path='todo' element={<Todo />} />
                     <Route path='task' element={<Task />} />
+                    <Route path='task-list' element={<TaskList/>}/>
                     <Route path='sign-in' element={<SignIn />} />
                     <Route path='*' element={<Nopage />} />
                 </Routes>

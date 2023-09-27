@@ -22,13 +22,13 @@ export default function Todo() {
         location = location.trim();
         description = description.trim();
         if (title.length < 3) {
-            return alert("Enter correct Title", "error")
+            return window.toastify('Enter more then 3 letters in Title','error')
         }
         if (location.length < 3) {
-            return alert("Enter correct Location", "error")
+            return window.toastify("Enter correct Location", "error")
         }
         if (description.length < 10) {
-            return alert("Enter more then 5 words Discription", "error")
+            return window.toastify("Enter more then 5 words Discription", "error")
         }
         let todo = { title, location, description }
         todo.dateCreated = serverTimestamp()
@@ -40,7 +40,7 @@ export default function Todo() {
         try {
             // Assuming you have 'db' imported from Firebase somewhere in your code.
             await setDoc(doc(db, 'todos', todo.id), todo);
-            alert('Todo is added successfully');
+            window.toastify('Todo is added successfully','success');
         } catch (err) {
             console.error(err);
         }
