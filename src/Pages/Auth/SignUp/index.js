@@ -1,5 +1,5 @@
 import React from 'react'
-import SignUp from './Signup'
+import SignUp from '../SignUp/SignUp'
 
 export default function index() {
   return (
